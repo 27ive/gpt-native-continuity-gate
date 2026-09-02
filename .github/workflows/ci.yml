@@ -20,7 +20,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install package
-        run: python -m pip install .
+        run: python -m pip install ".[dev,mcp-example]"
+      - name: Lint and format
+        run: |
+          python -m ruff check .
+          python -m ruff format --check .
       - name: Unit tests
         run: python -m unittest discover -s tests -v
       - name: Passing release example
@@ -29,5 +33,16 @@ jobs:
         run: continuity-gate validate examples/honest-partial.json --report-only
       - name: Read-only MCP surface capture
         run: continuity-gate audit-tools examples/evidence/mcp-tools-list.json
+      - name: MCP v2 example runtime
+        run: |
+          python - <<'PY'
+          import asyncio
+          from examples.read_only_mcp.server import mcp
+
+          tools = asyncio.run(mcp.list_tools())
+          assert [tool.name for tool in tools] == ["search_records", "read_record"]
+          assert all(tool.annotations.read_only_hint is True for tool in tools)
+          assert all(tool.annotations.open_world_hint is False for tool in tools)
+          PY
       - name: Compile package
         run: python -m compileall -q src tests examples/read_only_mcp

@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import json
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
-from typing import Any, Iterable
+from typing import Any
 
 from .tool_audit import is_write_like_name
-
 
 SCHEMA = "gpt-native-continuity-gate/v1"
 JOURNEY_STATUSES = {"passed", "partial", "failed", "pending", "not_applicable"}

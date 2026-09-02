@@ -11,7 +11,6 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
-
 WRITE_WORDS = {
     "add",
     "apply",

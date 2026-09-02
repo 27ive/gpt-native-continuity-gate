@@ -8,13 +8,11 @@ import unittest
 from datetime import datetime, timezone
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from continuity_gate.tool_audit import audit_tools  # noqa: E402
 from continuity_gate.validator import validate_manifest  # noqa: E402
-
 
 AS_OF = datetime(2026, 9, 2, 12, 0, tzinfo=timezone.utc)
 

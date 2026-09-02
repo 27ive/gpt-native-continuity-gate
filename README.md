@@ -104,7 +104,7 @@ primary technical sources are in [docs/references.md](docs/references.md).
 
 ## Status
 
-`0.1.1` is an intentionally small public alpha. The validator is deterministic,
+`0.1.2` is an intentionally small public alpha. The validator is deterministic,
 standard-library only, covered by unit tests, and safe to run offline. It does not
 connect to an account, inspect a private archive, or certify that an MCP server is
 secure.

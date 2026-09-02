@@ -11,7 +11,6 @@ unchanged. Annotations are hints; they are not the enforcement layer.
 from mcp.server import MCPServer
 from mcp.types import ToolAnnotations
 
-
 mcp = MCPServer("Read-only context example")
 
 RECORDS = {
