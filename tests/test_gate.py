@@ -41,6 +41,13 @@ class GateValidationTests(unittest.TestCase):
         self.assertEqual(report.score, 30.0)
         self.assertIn("mobile_chat_continuity", " ".join(report.warnings))
 
+    def test_partial_journey_requires_evidence(self) -> None:
+        payload = load_example("honest-partial.json")
+        payload["journeys"][1]["evidence"] = []
+        report = validate(payload)
+        self.assertFalse(report.valid)
+        self.assertIn("partial journey has no evidence", " ".join(report.errors))
+
     def test_declared_ready_cannot_override_computed_gate(self) -> None:
         payload = load_example("honest-partial.json")
         payload["release"]["declared_ready"] = True
@@ -157,6 +164,14 @@ class GateValidationTests(unittest.TestCase):
         self.assertTrue(report.valid, report.errors)
         self.assertIn("approval_required=true", " ".join(report.warnings))
 
+    def test_release_requires_at_least_one_claim(self) -> None:
+        payload = load_example()
+        payload["release"]["required_claims"] = []
+        payload["release"]["declared_ready"] = False
+        report = validate(payload)
+        self.assertFalse(report.valid)
+        self.assertIn("non-empty string array", " ".join(report.errors))
+
     def test_invalid_json_shape_does_not_crash(self) -> None:
         report = validate_manifest([], root=ROOT, as_of=AS_OF)
         self.assertFalse(report.valid)
@@ -192,6 +207,19 @@ class ToolAuditTests(unittest.TestCase):
         self.assertIn("readOnlyHint", joined)
         self.assertIn("delete_record", joined)
         self.assertIn("destructiveHint", joined)
+
+    def test_camel_case_write_name_is_rejected(self) -> None:
+        payload = {
+            "tools": [
+                {
+                    "name": "deleteRecord",
+                    "annotations": {"readOnlyHint": True, "openWorldHint": False},
+                }
+            ]
+        }
+        report = audit_tools(payload)
+        self.assertFalse(report.valid)
+        self.assertIn("deleteRecord", " ".join(report.errors))
 
     def test_missing_tools_array_is_rejected(self) -> None:
         report = audit_tools({})

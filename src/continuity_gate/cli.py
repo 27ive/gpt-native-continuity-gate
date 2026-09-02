@@ -9,6 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from . import __version__
 from .tool_audit import audit_tools
 from .validator import GateReport, validate_manifest
 
@@ -75,6 +76,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="continuity-gate",
         description="Refuse cross-surface personal AI claims without matching evidence.",
+    )
+    parser.add_argument(
+        "--version", action="version", version=f"%(prog)s {__version__}"
     )
     subcommands = parser.add_subparsers(dest="command", required=True)
 

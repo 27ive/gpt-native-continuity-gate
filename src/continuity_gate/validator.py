@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
 
-from .tool_audit import WRITE_WORDS
+from .tool_audit import is_write_like_name
 
 
 SCHEMA = "gpt-native-continuity-gate/v1"
@@ -80,11 +80,6 @@ def _safe_relative_path(value: Any) -> bool:
         return False
     path = PurePosixPath(value)
     return not path.is_absolute() and ".." not in path.parts
-
-
-def _write_like(name: str) -> bool:
-    words = name.lower().replace("-", "_").split("_")
-    return bool(set(words) & WRITE_WORDS)
 
 
 def _scan_public_safety(manifest: Any) -> list[str]:
@@ -166,7 +161,7 @@ def _validate_tool_surfaces(
             if surface.get("implementation_verified") is not True:
                 errors.append(f"{name}: implementation behavior was not verified")
             for tool_name in tool_names:
-                if _write_like(tool_name):
+                if is_write_like_name(tool_name):
                     errors.append(
                         f"{name}: write-like tool appears on a read-only surface: {tool_name}"
                     )
@@ -235,8 +230,8 @@ def _validate_journeys(
         if not isinstance(evidence, list):
             errors.append(f"{identifier}: evidence must be an array")
             evidence = []
-        if status == "passed" and not evidence:
-            errors.append(f"{identifier}: passed journey has no evidence")
+        if status in {"passed", "partial"} and not evidence:
+            errors.append(f"{identifier}: {status} journey has no evidence")
 
         kinds: set[str] = set()
         for evidence_index, raw_item in enumerate(evidence):
@@ -411,10 +406,12 @@ def validate_manifest(
         errors.append("release.minimum_score must be in [0, 100]")
         minimum_score = 100
     required_claims = release.get("required_claims")
-    if not isinstance(required_claims, list) or not all(
-        isinstance(item, str) and item for item in required_claims
+    if (
+        not isinstance(required_claims, list)
+        or not required_claims
+        or not all(isinstance(item, str) and item for item in required_claims)
     ):
-        errors.append("release.required_claims must be a string array")
+        errors.append("release.required_claims must be a non-empty string array")
         required_claims = []
     unknown_claims = [item for item in required_claims if item not in claims]
     if unknown_claims:

@@ -7,6 +7,7 @@ safe. Pair it with implementation tests or sandboxing.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -54,9 +55,13 @@ class ToolAudit:
         }
 
 
-def _write_like(name: str) -> bool:
-    normalized = name.lower().replace("-", "_")
-    return bool(set(normalized.split("_")) & WRITE_WORDS)
+def is_write_like_name(name: str) -> bool:
+    # MCP tool names are commonly snake_case, but custom servers also expose
+    # kebab-case, dotted names, and camelCase. Normalize all four so a name
+    # such as deleteRecord cannot bypass the consistency check.
+    camel_split = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", name)
+    words = {part.lower() for part in re.split(r"[^A-Za-z0-9]+", camel_split) if part}
+    return bool(words & WRITE_WORDS)
 
 
 def audit_tools(payload: Any, *, require_closed_world: bool = True) -> ToolAudit:
@@ -83,7 +88,7 @@ def audit_tools(payload: Any, *, require_closed_world: bool = True) -> ToolAudit
         if name in names:
             errors.append(f"duplicate tool name: {name}")
         names.add(name)
-        if _write_like(name):
+        if is_write_like_name(name):
             errors.append(f"read-only surface exposes a write-like tool name: {name}")
 
         annotations = tool.get("annotations")
