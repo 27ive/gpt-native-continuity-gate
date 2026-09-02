@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gpt-native-continuity-gate"
+version = "0.1.0"
+description = "Evidence gates for honest cross-surface personal AI continuity claims."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "27ive" }]
+keywords = ["chatgpt", "codex", "mcp", "evaluation", "personal-ai"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+dependencies = []
+
+[project.optional-dependencies]
+mcp-example = ["mcp[cli]>=2.0,<3"]
+dev = ["build>=1.2"]
+
+[project.scripts]
+continuity-gate = "continuity_gate.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/27ive/gpt-native-continuity-gate"
+Repository = "https://github.com/27ive/gpt-native-continuity-gate"
+Issues = "https://github.com/27ive/gpt-native-continuity-gate/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,9 @@
+{
+  "journey": "host_restart",
+  "sanitized": true,
+  "observed": [
+    "The host was restarted.",
+    "The private read service recovered without recreating credentials.",
+    "A post-restart read completed through the real client path."
+  ]
+}

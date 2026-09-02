@@ -1,0 +1,144 @@
+{
+  "schema": "gpt-native-continuity-gate/v1",
+  "public_safe": true,
+  "system": {
+    "name": "Example candidate with honest gaps",
+    "identity": {
+      "shared_name_across_surfaces": true,
+      "capability_sharing_is_not_implied": true,
+      "shared_history": false,
+      "shared_memory": false,
+      "shared_tools": false,
+      "shared_permissions": false
+    }
+  },
+  "tool_surfaces": [
+    {
+      "name": "private-context",
+      "mode": "read_only",
+      "tool_names": ["recall_context", "search_archive", "read_archive"],
+      "write_tool_count": 0,
+      "annotations_verified": true,
+      "implementation_verified": true,
+      "enforcement_artifacts": [
+        "evidence/mcp-tools-list.json",
+        "evidence/readonly-implementation-test.txt"
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "desktop_private_context",
+      "weight": 20,
+      "critical": true,
+      "status": "passed",
+      "required_evidence_kind": "live_desktop",
+      "evidence": [
+        {
+          "kind": "live_desktop",
+          "observed_at": "2026-09-01T08:00:00Z",
+          "artifact": "evidence/desktop.json",
+          "assertions": ["real client call", "expected source hit", "answer returned"]
+        }
+      ]
+    },
+    {
+      "id": "mobile_chat_continuity",
+      "weight": 20,
+      "critical": true,
+      "status": "partial",
+      "required_evidence_kind": "live_device",
+      "evidence": [
+        {
+          "kind": "document",
+          "observed_at": "2026-09-01T08:10:00Z",
+          "artifact": "evidence/account-sync.json",
+          "assertions": ["account sync documented", "physical phone round trip missing"]
+        }
+      ]
+    },
+    {
+      "id": "voice_continuity",
+      "weight": 15,
+      "critical": true,
+      "status": "pending",
+      "required_evidence_kind": "live_device",
+      "evidence": []
+    },
+    {
+      "id": "offline_failure",
+      "weight": 15,
+      "critical": true,
+      "status": "failed",
+      "required_evidence_kind": "live_service",
+      "evidence": [
+        {
+          "kind": "live_service",
+          "observed_at": "2026-09-01T08:30:00Z",
+          "artifact": "evidence/offline-failed.json",
+          "assertions": ["no fabrication", "request hung instead of degrading clearly"]
+        }
+      ]
+    },
+    {
+      "id": "host_restart",
+      "weight": 15,
+      "critical": true,
+      "status": "pending",
+      "required_evidence_kind": "live_service",
+      "evidence": []
+    },
+    {
+      "id": "push_delivery",
+      "weight": 15,
+      "critical": true,
+      "status": "pending",
+      "required_evidence_kind": "live_device",
+      "evidence": []
+    }
+  ],
+  "claims": [
+    {
+      "id": "desktop_private_context",
+      "status": "supported",
+      "requires": ["desktop_private_context"]
+    },
+    {
+      "id": "mobile_chat_continuity",
+      "status": "partial",
+      "requires": ["mobile_chat_continuity"]
+    },
+    {
+      "id": "voice_continuity",
+      "status": "not_claimed",
+      "requires": ["voice_continuity"]
+    },
+    {
+      "id": "offline_failure",
+      "status": "unsupported",
+      "requires": ["offline_failure"]
+    },
+    {
+      "id": "host_restart",
+      "status": "not_claimed",
+      "requires": ["host_restart"]
+    },
+    {
+      "id": "push_delivery",
+      "status": "not_claimed",
+      "requires": ["push_delivery"]
+    }
+  ],
+  "release": {
+    "minimum_score": 85,
+    "required_claims": [
+      "desktop_private_context",
+      "mobile_chat_continuity",
+      "voice_continuity",
+      "offline_failure",
+      "host_restart",
+      "push_delivery"
+    ],
+    "declared_ready": false
+  }
+}

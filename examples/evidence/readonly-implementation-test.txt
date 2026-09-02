@@ -1,0 +1,3 @@
+Sanitized example receipt: the backing fixture was mounted read-only, every exported
+tool was called, and before/after content hashes were identical. Replace this file
+with your own deterministic test output; an MCP annotation alone is not evidence.

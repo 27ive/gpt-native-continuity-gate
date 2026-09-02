@@ -1,0 +1,40 @@
+{
+  "tools": [
+    {
+      "name": "recall_context",
+      "description": "Recall a bounded stable fact.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "reflect_context",
+      "description": "Summarize bounded context.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "search_archive",
+      "description": "Search a fixed read-only archive.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "read_archive",
+      "description": "Read one record returned by search.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      }
+    }
+  ]
+}

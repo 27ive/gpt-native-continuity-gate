@@ -1,0 +1,9 @@
+{
+  "journey": "desktop_private_context",
+  "sanitized": true,
+  "observed": [
+    "The desktop client invoked the private read surface.",
+    "The expected fixture record was returned.",
+    "No write operation was exposed or observed."
+  ]
+}

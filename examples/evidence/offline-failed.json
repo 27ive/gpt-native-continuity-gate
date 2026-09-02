@@ -1,0 +1,8 @@
+{
+  "journey": "offline_failure",
+  "sanitized": true,
+  "observed": [
+    "The private host was intentionally stopped.",
+    "The request did not fabricate a result, but it remained pending instead of failing clearly."
+  ]
+}

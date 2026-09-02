@@ -1,0 +1,170 @@
+{
+  "schema": "gpt-native-continuity-gate/v1",
+  "public_safe": true,
+  "system": {
+    "name": "Example native-first personal AI",
+    "identity": {
+      "shared_name_across_surfaces": true,
+      "capability_sharing_is_not_implied": true,
+      "shared_history": false,
+      "shared_memory": false,
+      "shared_tools": false,
+      "shared_permissions": false
+    }
+  },
+  "tool_surfaces": [
+    {
+      "name": "private-context",
+      "mode": "read_only",
+      "tool_names": [
+        "recall_context",
+        "reflect_context",
+        "search_archive",
+        "read_archive"
+      ],
+      "write_tool_count": 0,
+      "annotations_verified": true,
+      "implementation_verified": true,
+      "enforcement_artifacts": [
+        "evidence/mcp-tools-list.json",
+        "evidence/readonly-implementation-test.txt"
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "desktop_private_context",
+      "weight": 20,
+      "critical": true,
+      "status": "passed",
+      "required_evidence_kind": "live_desktop",
+      "evidence": [
+        {
+          "kind": "live_desktop",
+          "observed_at": "2026-09-01T08:00:00Z",
+          "artifact": "evidence/desktop.json",
+          "assertions": ["real client call", "expected source hit", "answer returned"]
+        }
+      ]
+    },
+    {
+      "id": "mobile_chat_continuity",
+      "weight": 20,
+      "critical": true,
+      "status": "passed",
+      "required_evidence_kind": "live_device",
+      "evidence": [
+        {
+          "kind": "live_device",
+          "observed_at": "2026-09-01T08:10:00Z",
+          "artifact": "evidence/mobile.json",
+          "assertions": ["physical phone", "same conversation", "user reply returned"]
+        }
+      ]
+    },
+    {
+      "id": "voice_continuity",
+      "weight": 15,
+      "critical": true,
+      "status": "passed",
+      "required_evidence_kind": "live_device",
+      "evidence": [
+        {
+          "kind": "live_device",
+          "observed_at": "2026-09-01T08:20:00Z",
+          "artifact": "evidence/voice.json",
+          "assertions": ["two human voice turns", "identity boundary retained"]
+        }
+      ]
+    },
+    {
+      "id": "offline_failure",
+      "weight": 15,
+      "critical": true,
+      "status": "passed",
+      "required_evidence_kind": "live_service",
+      "evidence": [
+        {
+          "kind": "live_service",
+          "observed_at": "2026-09-01T08:30:00Z",
+          "artifact": "evidence/offline.json",
+          "assertions": ["source stopped", "clear unavailable result", "no fabrication"]
+        }
+      ]
+    },
+    {
+      "id": "host_restart",
+      "weight": 15,
+      "critical": true,
+      "status": "passed",
+      "required_evidence_kind": "live_service",
+      "evidence": [
+        {
+          "kind": "live_service",
+          "observed_at": "2026-09-01T08:40:00Z",
+          "artifact": "evidence/restart.json",
+          "assertions": ["real restart", "automatic recovery", "post-restart read"]
+        }
+      ]
+    },
+    {
+      "id": "push_delivery",
+      "weight": 15,
+      "critical": true,
+      "status": "passed",
+      "required_evidence_kind": "live_device",
+      "evidence": [
+        {
+          "kind": "live_device",
+          "observed_at": "2026-09-01T08:50:00Z",
+          "artifact": "evidence/push.json",
+          "assertions": ["product-originated push", "physical phone receipt", "correct destination"]
+        }
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "id": "desktop_private_context",
+      "status": "supported",
+      "requires": ["desktop_private_context"]
+    },
+    {
+      "id": "mobile_chat_continuity",
+      "status": "supported",
+      "requires": ["mobile_chat_continuity"]
+    },
+    {
+      "id": "voice_continuity",
+      "status": "supported",
+      "requires": ["voice_continuity"]
+    },
+    {
+      "id": "offline_failure",
+      "status": "supported",
+      "requires": ["offline_failure"]
+    },
+    {
+      "id": "host_restart",
+      "status": "supported",
+      "requires": ["host_restart"]
+    },
+    {
+      "id": "push_delivery",
+      "status": "supported",
+      "requires": ["push_delivery"]
+    }
+  ],
+  "release": {
+    "minimum_score": 85,
+    "required_claims": [
+      "desktop_private_context",
+      "mobile_chat_continuity",
+      "voice_continuity",
+      "offline_failure",
+      "host_restart",
+      "push_delivery"
+    ],
+    "declared_ready": true
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "journey": "mobile_chat_continuity",
+  "sanitized": true,
+  "observed": [
+    "A physical phone opened the synced conversation.",
+    "The user replied from that phone.",
+    "The assistant continued in the same account conversation."
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/27ive/gpt-native-continuity-gate/raw/main/schemas/continuity-gate-v1.schema.json",
+  "title": "GPT Native Continuity Gate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "public_safe",
+    "system",
+    "tool_surfaces",
+    "journeys",
+    "claims",
+    "release"
+  ],
+  "properties": {
+    "schema": {"const": "gpt-native-continuity-gate/v1"},
+    "public_safe": {"const": true},
+    "system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "identity"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "shared_name_across_surfaces",
+            "capability_sharing_is_not_implied",
+            "shared_history",
+            "shared_memory",
+            "shared_tools",
+            "shared_permissions"
+          ],
+          "properties": {
+            "shared_name_across_surfaces": {"type": "boolean"},
+            "capability_sharing_is_not_implied": {"type": "boolean"},
+            "shared_history": {"type": "boolean"},
+            "shared_memory": {"type": "boolean"},
+            "shared_tools": {"type": "boolean"},
+            "shared_permissions": {"type": "boolean"}
+          }
+        }
+      }
+    },
+    "tool_surfaces": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/toolSurface"}
+    },
+    "journeys": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/journey"}
+    },
+    "claims": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/claim"}
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum_score", "required_claims", "declared_ready"],
+      "properties": {
+        "minimum_score": {"type": "number", "minimum": 0, "maximum": 100},
+        "required_claims": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "declared_ready": {"type": "boolean"}
+      }
+    }
+  },
+  "$defs": {
+    "toolSurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "mode", "tool_names"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "mode": {"enum": ["read_only", "write_capable"]},
+        "tool_names": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "write_tool_count": {"type": "integer", "minimum": 0},
+        "annotations_verified": {"type": "boolean"},
+        "implementation_verified": {"type": "boolean"},
+        "enforcement_artifacts": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "approval_required": {"type": "boolean"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "observed_at", "artifact", "assertions"],
+      "properties": {
+        "kind": {
+          "enum": [
+            "live_device",
+            "live_desktop",
+            "live_service",
+            "synthetic",
+            "document",
+            "self_report"
+          ]
+        },
+        "observed_at": {"type": "string", "format": "date-time"},
+        "artifact": {"type": "string", "minLength": 1},
+        "assertions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "journey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "weight", "critical", "status", "evidence"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "weight": {"type": "number", "exclusiveMinimum": 0, "maximum": 100},
+        "critical": {"type": "boolean"},
+        "status": {
+          "enum": ["passed", "partial", "failed", "pending", "not_applicable"]
+        },
+        "required_evidence_kind": {
+          "enum": [
+            "live_device",
+            "live_desktop",
+            "live_service",
+            "synthetic",
+            "document",
+            "self_report"
+          ]
+        },
+        "fresh_for_days": {"type": "number", "exclusiveMinimum": 0},
+        "evidence": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/evidence"}
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "requires"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "status": {
+          "enum": ["supported", "partial", "unsupported", "not_claimed"]
+        },
+        "requires": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

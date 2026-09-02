@@ -1,0 +1,9 @@
+{
+  "journey": "offline_failure",
+  "sanitized": true,
+  "observed": [
+    "The private host was intentionally stopped.",
+    "The assistant reported that private context was unavailable.",
+    "The assistant did not fabricate a result from the offline source."
+  ]
+}

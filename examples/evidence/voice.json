@@ -1,0 +1,9 @@
+{
+  "journey": "voice_continuity",
+  "sanitized": true,
+  "observed": [
+    "A human completed two spoken turns on a physical phone.",
+    "The voice surface retained the intended identity boundary.",
+    "No tool or memory access was claimed without an observed call."
+  ]
+}

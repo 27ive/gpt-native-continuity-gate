@@ -1,0 +1,8 @@
+{
+  "journey": "mobile_chat_continuity",
+  "sanitized": true,
+  "observed": [
+    "The account documentation says conversations synchronize across clients.",
+    "No physical-device round trip was captured, so this is not a pass."
+  ]
+}
